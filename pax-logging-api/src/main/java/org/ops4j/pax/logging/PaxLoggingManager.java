@@ -17,13 +17,15 @@
  */
 package org.ops4j.pax.logging;
 
+import java.util.Set;
+
 import org.osgi.framework.Bundle;
 
 public interface PaxLoggingManager
 {
 
     PaxLogger getLogger( String category, String fqcn );
-
+    
     PaxLoggingService getPaxLoggingService();
 
     void open();
@@ -33,4 +35,8 @@ public interface PaxLoggingManager
     void dispose();
 
     Bundle getBundle();
+    
+    Set<PaxLogger> getLoggers();
+
+    void setLogLevel(String name, String level);
 }

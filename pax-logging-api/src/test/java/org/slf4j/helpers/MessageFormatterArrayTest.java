@@ -27,6 +27,7 @@ import org.osgi.framework.Bundle;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import java.lang.reflect.Field;
+import java.util.Set;
 
 public class MessageFormatterArrayTest extends TestCase
 {
@@ -216,6 +217,16 @@ public class MessageFormatterArrayTest extends TestCase
         public Bundle getBundle()
         {
             return null;
+        }
+
+        @Override
+        public Set<PaxLogger> getLoggers() {
+            return null;
+        }
+
+        @Override
+        public void setLogLevel(String name, String level) {
+
         }
     }
 }

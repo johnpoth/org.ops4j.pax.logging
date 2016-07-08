@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -366,6 +367,16 @@ public class PaxLoggingServiceImpl
             {
                 return PaxLoggingServiceImpl.this.getPaxContext();
             }
+
+            @Override
+            public Set<PaxLogger> getLoggers() {
+                return null;
+            }
+
+            @Override
+            public void setLogLevel(String name, String level) {
+
+            }
         }
 
         return new ManagedPaxLoggingService();
@@ -379,6 +390,16 @@ public class PaxLoggingServiceImpl
     public PaxContext getPaxContext()
     {
         return m_context;
+    }
+
+    @Override
+    public Set<PaxLogger> getLoggers() {
+        return null;
+    }
+
+    @Override
+    public void setLogLevel(String name, String level) {
+
     }
 
     private static int convertLevel( String levelName )

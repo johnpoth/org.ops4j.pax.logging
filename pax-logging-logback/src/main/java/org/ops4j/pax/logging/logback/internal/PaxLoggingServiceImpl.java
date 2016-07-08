@@ -51,7 +51,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * An implementation of PaxLoggingService that delegates to Logback.
@@ -467,6 +470,14 @@ public class PaxLoggingServiceImpl implements PaxLoggingService, org.knopflerfis
             {
                 return PaxLoggingServiceImpl.this.getPaxContext();
             }
+
+            public Set<PaxLogger> getLoggers() {
+                return PaxLoggingServiceImpl.this.getLoggers();
+            }
+
+            public void setLogLevel(String name, String level) {
+                PaxLoggingServiceImpl.this.setLogLevel(name,level);
+            }
         }
 
         return new ManagedPaxLoggingService();
@@ -480,6 +491,27 @@ public class PaxLoggingServiceImpl implements PaxLoggingService, org.knopflerfis
     public PaxContext getPaxContext()
     {
         return m_paxContext;
+    }
+
+    public Set<PaxLogger> getLoggers() {
+        final List<Logger> loggerList = m_logbackContext.getLoggerList();
+        final Set<PaxLogger> paxLoggers = new HashSet<PaxLogger>(loggerList.size());
+      
+        for (Logger logger : loggerList) {
+            final PaxLoggerImpl paxLogger = new PaxLoggerImpl(null, logger, logger.getName(), this, new PaxEventHandler() {
+                public void handleEvents(Bundle bundle, @Nullable ServiceReference sr, int level, String message, Throwable exception) {
+                    LogEntry entry = new LogEntryImpl(bundle, sr, level, message, exception);
+                    m_logReader.fireEvent(entry);
+                    m_eventAdmin.postEvent(bundle, level, entry, message, exception, sr, getPaxContext().getContext());
+                }
+            });
+            paxLoggers.add(paxLogger);
+        }
+        return paxLoggers;
+    }
+
+    public void setLogLevel(String name, String level) {
+        m_logbackContext.getLogger(name).setLevel(Level.toLevel(level));
     }
 
     private static int convertLevel( String levelName )

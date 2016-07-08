@@ -25,6 +25,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -412,6 +413,16 @@ public class PaxLoggingServiceImpl
             {
                 return PaxLoggingServiceImpl.this.getPaxContext();
             }
+
+            @Override
+            public Set<PaxLogger> getLoggers() {
+                return null;
+            }
+
+            @Override
+            public void setLogLevel(String name, String level) {
+
+            }
         }
 
         return new ManagedPaxLoggingService();
@@ -425,6 +436,16 @@ public class PaxLoggingServiceImpl
     public PaxContext getPaxContext()
     {
         return m_paxContext;
+    }
+
+    @Override
+    public Set<PaxLogger> getLoggers() {
+        return null;
+    }
+
+    @Override
+    public void setLogLevel(String name, String level) {
+
     }
 
     private static int convertLevel( String levelName )

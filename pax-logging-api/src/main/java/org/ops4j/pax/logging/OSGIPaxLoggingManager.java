@@ -17,8 +17,10 @@
  */
 package org.ops4j.pax.logging;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.ops4j.pax.logging.internal.BundleHelper;
 import org.ops4j.pax.logging.internal.TrackingLogger;
@@ -66,7 +68,9 @@ public class OSGIPaxLoggingManager extends ServiceTracker
 
     public void removedService(ServiceReference reference, Object service)
     {
-        m_service = null;
+        synchronized (m_service) {
+            m_service = null;
+        }
         if (m_logServiceRef == null) {
             m_context.ungetService(m_logServiceRef);
             m_logServiceRef = null;
@@ -95,6 +99,26 @@ public class OSGIPaxLoggingManager extends ServiceTracker
                 m_loggers.put(key, logger);
             }
             return logger;
+        }
+    }
+
+    @Override
+    public Set<PaxLogger> getLoggers() {
+        synchronized (m_service) {
+            if (m_service != null) {
+                return m_service.getLoggers();
+            }else{
+                return Collections.emptySet();
+            }
+        }
+    }
+
+    @Override
+    public void setLogLevel(String name, String level) {
+        synchronized (m_service) {
+            if (m_service != null) {
+                m_service.setLogLevel(name, level);
+            }
         }
     }
 

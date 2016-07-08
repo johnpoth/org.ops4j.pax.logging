@@ -47,7 +47,7 @@ import ch.qos.logback.classic.Logger;
  * @author Raul Kripalani
  */
 public class PaxLoggerImpl
-    implements PaxLogger
+    implements PaxLogger, Comparable<PaxLogger> 
 {
 
     private final Logger m_delegate;
@@ -242,6 +242,22 @@ public class PaxLoggerImpl
         return new PaxLevelForLogback(m_delegate.getEffectiveLevel()).toInt();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PaxLoggerImpl)) return false;
+
+        PaxLoggerImpl paxLogger = (PaxLoggerImpl) o;
+
+        return getName().equals(paxLogger.getName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
     public String getName()
     {
         return m_delegate.getName();
@@ -250,5 +266,9 @@ public class PaxLoggerImpl
     public PaxContext getPaxContext()
     {
         return m_service.getPaxContext();
+    }
+
+    public int compareTo(PaxLogger o) {
+        return this.m_delegate.getName().compareTo(o.getName());
     }
 }
